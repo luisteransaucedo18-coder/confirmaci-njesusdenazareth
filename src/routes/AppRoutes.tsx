@@ -12,12 +12,24 @@ import { ReportesPage } from "@/features/reportes/pages/ReportesPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AppLayout } from "@/layouts/AppLayout";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
+import Nosotros from "@/features/landing/pages/Nosotros";
+import Actividades from "@/features/landing/pages/Actividades";
+import Galeria from "@/features/landing/pages/Galeria";
+import Contacto from "@/features/landing/pages/Contacto";
+import Catequistas from "@/features/landing/pages/Catequistas";
+import Inicio from "@/features/landing/pages/Inicio";
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/inicio" element={<Inicio />} />
+      <Route path="/nosotros" element={<Nosotros />} />
+      <Route path="/actividades" element={<Actividades />} />
+      <Route path="/galeria" element={<Galeria />} />
+      <Route path="/contacto" element={<Contacto />} />
+      <Route path="/catequesis" element={<Catequistas />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/app" element={<AppLayout />}>
           <Route index element={<DashboardPage />} />

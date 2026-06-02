@@ -1,21 +1,36 @@
 import { CalendarDays, HeartHandshake, Mail } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input, Textarea } from "@/components/ui/Input";
 import { createRow } from "@/services/mutations";
+import { getGalleryItems, getUpcomingEventos } from "@/features/landing/services/landingService";
+import { LandingHeader } from "@/features/landing/components/LandingHeader";
+import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import heroImage from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.07 PM.jpeg";
 import gallery1 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.03 PM.jpeg";
 import gallery2 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.04 PM.jpeg";
 import gallery3 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.05 PM.jpeg";
 import gallery4 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.06 PM.jpeg";
 
-const nav = ["Inicio", "Nosotros", "Catequesis", "Actividades", "Galeria", "Contacto"];
-
 export function LandingPage() {
-  const slides = [heroImage, gallery1, gallery2, gallery3];
+  const { data: galleryItems = [] } = useQuery({
+    queryKey: ["landingGallery"],
+    queryFn: getGalleryItems,
+  });
+
+  const { data: upcomingEvents = [] } = useQuery({
+    queryKey: ["landingUpcomingEvents"],
+    queryFn: getUpcomingEventos,
+  });
+
+  const slides = galleryItems.length
+    ? galleryItems.slice(0, 4).map((item) => item.public_url ?? item.storage_path)
+    : [heroImage, gallery1, gallery2, gallery3];
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -35,18 +50,11 @@ export function LandingPage() {
   }
 
   return (
-    <main className="bg-[var(--background)] text-[var(--foreground)]">
-      <nav className="fixed inset-x-0 top-0 z-40 border-b border-transparent bg-[var(--secondary)]/95 px-5 py-3 text-white backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center gap-5">
-          <a href="#inicio" className="text-base font-black">Jesus de Nazareth</a>
-          <div className="ml-auto hidden gap-5 text-sm md:flex">
-            {nav.map((item) => <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>)}
-          </div>
-          <Link to="/login" className="rounded-md bg-[var(--primary)] px-3 py-2 text-sm font-semibold text-[var(--on-primary)] shadow-sm shadow-[var(--primary)]/20 transition hover:opacity-90">Iniciar Sesion</Link>
-        </div>
-      </nav>
+    <>
+      <LandingHeader />
+      <main className="bg-[var(--background)] text-[var(--foreground)] pt-24">
       <section
-        id="inicio"
+        id="/inicio"
         className="relative min-h-[92vh] bg-cover bg-center px-5 pt-24 text-white"
         style={{ backgroundImage: `linear-gradient(rgba(15,23,42,.76),rgba(15,23,42,.86)), url(${slides[activeIndex]})` }}
       >
@@ -59,7 +67,7 @@ export function LandingPage() {
               <Link to="/login" className="inline-flex items-center rounded-md bg-[var(--primary)] px-3 py-2 text-sm font-semibold text-[var(--on-primary)] shadow-lg shadow-[var(--primary)]/20 transition hover:opacity-90">
                 Iniciar Sesion
               </Link>
-              <a href="#nosotros"><Button variant="secondary"><HeartHandshake className="h-4 w-4" /> Conocer Mas</Button></a>
+              <Link to="/nosotros"><Button variant="secondary"><HeartHandshake className="h-4 w-4" /> Conocer Mas</Button></Link>
             </div>
           </div>
         </div>
@@ -69,7 +77,7 @@ export function LandingPage() {
           ))}
         </div>
       </section>
-      <section id="nosotros" className="px-5 py-16">
+      <section id="/nosotros" className="px-5 py-16">
         <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
           {[
             ["Sobre Nosotros", "Acompanamos a jovenes en su proceso de confirmacion con formacion humana, espiritual y comunitaria."],
@@ -78,7 +86,7 @@ export function LandingPage() {
           ].map(([title, text]) => <Card key={title}><h2 className="text-xl font-bold">{title}</h2><p className="mt-2 text-sm text-[var(--muted-foreground)]">{text}</p></Card>)}
         </div>
       </section>
-      <section id="catequesis" className="bg-[var(--card)] px-5 py-16">
+      <section id="/catequesis" className="bg-[var(--card)] px-5 py-16">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-black">Valores y cronograma</h2>
           <div className="mt-6 grid gap-5 md:grid-cols-4">
@@ -86,24 +94,44 @@ export function LandingPage() {
           </div>
         </div>
       </section>
-      <section id="actividades" className="px-5 py-16">
+      <section id="/actividades" className="px-5 py-16">
         <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
-          {["Retiros", "Convivencias", "Actividades Parroquiales"].map((item) => <Card key={item}><CalendarDays className="mb-3 h-6 w-6 text-[var(--secondary)]" /><h3 className="font-bold">{item}</h3><p className="mt-2 text-sm text-[var(--muted-foreground)]">Programacion conectable al modulo de eventos.</p></Card>)}
+          {upcomingEvents.length ? upcomingEvents.map((evento) => (
+            <Card key={evento.id}>
+              <CalendarDays className="mb-3 h-6 w-6 text-[var(--secondary)]" />
+              <h3 className="font-bold">{evento.nombre}</h3>
+              <p className="mt-2 text-sm text-[var(--muted-foreground)]">{evento.descripcion ?? evento.tipo}</p>
+            </Card>
+          )) : ["Retiros", "Convivencias", "Actividades Parroquiales"].map((item) => (
+            <Card key={item}>
+              <CalendarDays className="mb-3 h-6 w-6 text-[var(--secondary)]" />
+              <h3 className="font-bold">{item}</h3>
+              <p className="mt-2 text-sm text-[var(--muted-foreground)]">Programacion conectable al modulo de eventos.</p>
+            </Card>
+          ))}
         </div>
       </section>
-      <section id="galeria" className="bg-[var(--card)] px-5 py-16">
+      <section id="/galeria" className="bg-[var(--card)] px-5 py-16">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-black">Galeria</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-4">
-            {[gallery1, gallery2, gallery3, gallery4].map((src, index) => (
-              <div key={src} className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--background)] shadow-sm">
-                <img src={src} alt={`Galeria ${index + 1}`} className="h-56 w-full object-cover" />
-              </div>
-            ))}
+            {(galleryItems.length ? galleryItems : [
+              { id: "fallback-1", titulo: "Encuentro Juvenil", public_url: gallery1 },
+              { id: "fallback-2", titulo: "Dinámicas de Integración", public_url: gallery2 },
+              { id: "fallback-3", titulo: "Convivencia Parroquial", public_url: gallery3 },
+              { id: "fallback-4", titulo: "Formación Cristiana", public_url: gallery4 },
+            ]).map((item, index) => {
+              const src = item.public_url ?? item.storage_path ?? gallery1;
+              return (
+                <div key={item.id ?? index} className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--background)] shadow-sm">
+                  <img src={src} alt={item.titulo ?? `Galeria ${index + 1}`} className="h-56 w-full object-cover" />
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
-      <section id="contacto" className="px-5 py-16">
+      <section id="/contacto" className="px-5 py-16">
         <form onSubmit={contact} className="mx-auto max-w-2xl space-y-4">
           <h2 className="text-3xl font-black">Contacto</h2>
           <Input name="nombre" placeholder="Nombre" required />
@@ -113,5 +141,7 @@ export function LandingPage() {
         </form>
       </section>
     </main>
+    <LandingFooter />
+    </>
   );
 }
