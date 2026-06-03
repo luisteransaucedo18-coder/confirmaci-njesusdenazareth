@@ -1,170 +1,162 @@
 import { Camera, Image as ImageIcon } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/Card";
-import { getGalleryItems } from "@/features/landing/services/landingService";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingHeader } from "@/features/landing/components/LandingHeader";
-
-type GalleryItem = {
-  id: string;
-  titulo: string;
-  descripcion?: string;
-  public_url?: string;
-  storage_path?: string;
-};
 
 import gallery1 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.03 PM.jpeg";
 import gallery2 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.04 PM.jpeg";
 import gallery3 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.05 PM.jpeg";
 import gallery4 from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.06 PM.jpeg";
 
+const galleryItems = [
+  { id: "gallery-1", titulo: "Encuentro Juvenil", public_url: gallery1 },
+  { id: "gallery-2", titulo: "Dinámicas de Integración", public_url: gallery2 },
+  { id: "gallery-3", titulo: "Convivencia Parroquial", public_url: gallery3 },
+  { id: "gallery-4", titulo: "Formación Cristiana", public_url: gallery4 },
+  { id: "gallery-5", titulo: "Retiro Espiritual", public_url: gallery1 },
+  { id: "gallery-6", titulo: "Actividades Pastorales", public_url: gallery2 },
+  { id: "gallery-7", titulo: "Misión Juvenil", public_url: gallery3 },
+  { id: "gallery-8", titulo: "Celebración Comunitaria", public_url: gallery4 },
+];
+
 export default function Galeria() {
-  const { data: fotos = [] as GalleryItem[] } = useQuery<GalleryItem[]>({
-    queryKey: ["landingGallery"],
-    queryFn: getGalleryItems,
-  });
-
-  const galleryItems: GalleryItem[] = fotos.length
-    ? fotos
-    : [
-        { id: "fallback-1", titulo: "Encuentro Juvenil", public_url: gallery1 },
-        { id: "fallback-2", titulo: "Dinámicas de Integración", public_url: gallery2 },
-        { id: "fallback-3", titulo: "Convivencia Parroquial", public_url: gallery3 },
-        { id: "fallback-4", titulo: "Formación Cristiana", public_url: gallery4 },
-        { id: "fallback-5", titulo: "Retiro Espiritual", public_url: gallery1 },
-        { id: "fallback-6", titulo: "Actividades Pastorales", public_url: gallery2 },
-        { id: "fallback-7", titulo: "Misión Juvenil", public_url: gallery3 },
-        { id: "fallback-8", titulo: "Celebración Comunitaria", public_url: gallery4 },
-      ];
-
   return (
     <>
       <LandingHeader />
-      <main className="min-h-screen bg-[var(--background)] pt-24">
-        <section className="bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 py-28 text-white">
-          <div className="mx-auto max-w-7xl px-6 text-center">
-            <Camera className="mx-auto mb-6 h-16 w-16 text-yellow-400" />
+      <main className="bg-[var(--background)] text-[var(--foreground)]">
 
-            <h1 className="text-5xl font-black md:text-7xl">
-              Galería
-            </h1>
+        {/* HERO (Mismo diseño inmersivo, tipografías y badge difuminado) */}
+        <section
+          className="relative min-h-screen overflow-hidden bg-cover bg-center flex items-center"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.75)), url(${gallery1})`,
+          }}
+        >
+          <div className="mx-auto flex w-full max-w-7xl items-center px-6 py-24">
+            <div className="max-w-4xl text-white">
+              <span className="inline-flex rounded-full bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-md">
+                Recuerdos
+              </span>
 
-          <p className="mx-auto mt-6 max-w-3xl text-xl text-slate-300">
-            Revive los mejores momentos de nuestro Grupo de
-            Confirmación Juvenil a través de fotografías de
-            encuentros, retiros, convivencias y actividades
-            parroquiales.
-          </p>
-        </div>
-      </section>
+              <h1 className="mt-8 text-5xl font-black leading-tight md:text-7xl">
+                Nuestra Galería
+                <br />
+                de Momentos.
+              </h1>
 
-      {/* INTRO */}
+              <p className="mt-8 max-w-2xl text-xl text-white/80">
+                Revive los mejores momentos de nuestro Grupo de Confirmación Juvenil 
+                a través de fotografías de encuentros, retiros, convivencias y actividades parroquiales.
+              </p>
+            </div>
+          </div>
+        </section>
 
-      <section className="py-16">
-        <div className="mx-auto max-w-5xl px-6 text-center">
-          <h2 className="text-4xl font-black">
-            Momentos que construyen comunidad
-          </h2>
+        {/* INTRODUCCIÓN Y GRILLA DE IMÁGENES (Bordes redondeados curvos y efectos hover fluidos) */}
+        <section className="py-24">
+          <div className="mx-auto max-w-7xl px-6">
+            
+            <div className="mb-16 text-center">
+              <span className="inline-flex rounded-full bg-[var(--primary)]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.25em] text-[var(--primary)]">
+                Comunidad en Imágenes
+              </span>
+              <h2 className="mt-6 text-4xl font-black md:text-5xl">
+                Momentos que construyen comunidad
+              </h2>
+              <p className="mx-auto mt-6 max-w-3xl text-lg text-[var(--muted-foreground)]">
+                Cada fotografía representa experiencias de fe, amistad, aprendizaje 
+                y crecimiento espiritual vividas por nuestros jóvenes.
+              </p>
+            </div>
 
-          <p className="mt-4 text-lg text-[var(--muted-foreground)]">
-            Cada fotografía representa experiencias de fe,
-            amistad, aprendizaje y crecimiento espiritual
-            vividas por nuestros jóvenes.
-          </p>
-        </div>
-      </section>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+              {galleryItems.map((foto) => {
+                const src = foto.public_url;
 
-      {/* GALERÍA */}
-
-      <section className="pb-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {galleryItems.map((foto) => {
-              const src = foto.public_url ?? foto.storage_path ?? gallery1;
-
-              return (
-                <Card
-                  key={foto.id}
-                  className="overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="overflow-hidden">
-                    <img
-                      src={src}
-                      alt={foto.titulo}
-                      className="h-72 w-full object-cover transition duration-500 hover:scale-110"
-                    />
-                  </div>
-
-                  <div className="p-4">
-                    <div className="flex items-center gap-2">
-                      <ImageIcon className="h-4 w-4 text-[var(--primary)]" />
-                      <h3 className="font-semibold">
-                        {foto.titulo}
-                      </h3>
+                return (
+                  <Card
+                    key={foto.id}
+                    className="group overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--card)] transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[rgba(0,0,0,0.06)]"
+                  >
+                    <div className="overflow-hidden aspect-[4/3]">
+                      <img
+                        src={src}
+                        alt={foto.titulo}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      />
                     </div>
-                  </div>
-                </Card>
-              );
-            })}
+
+                    <div className="p-6">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--primary)]/10">
+                          <ImageIcon className="h-4 w-4 text-[var(--primary)]" />
+                        </div>
+                        <h3 className="font-bold text-[var(--foreground)] line-clamp-1">
+                          {foto.titulo}
+                        </h3>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ESTADÍSTICAS */}
+        {/* ESTADÍSTICAS (Fondo alterno --card con bloques estilizados usando las variables de la paleta) */}
+        <section className="bg-[var(--card)] py-24">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="grid gap-6 md:grid-cols-3">
+              
+              <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-8 text-center shadow-md transition hover:-translate-y-1">
+                <span className="block text-5xl font-black text-[var(--primary)]">
+                  +500
+                </span>
+                <span className="mt-3 block font-semibold text-[var(--muted-foreground)]">
+                  Fotografías
+                </span>
+              </div>
 
-      <section className="bg-[var(--card)] py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-6 md:grid-cols-3">
-            <Card className="text-center">
-              <h3 className="text-5xl font-black text-[var(--primary)]">
-                +500
-              </h3>
+              <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-8 text-center shadow-md transition hover:-translate-y-1">
+                <span className="block text-5xl font-black text-[var(--secondary)]">
+                  +30
+                </span>
+                <span className="mt-3 block font-semibold text-[var(--muted-foreground)]">
+                  Eventos Realizados
+                </span>
+              </div>
 
-              <p className="mt-3 font-semibold">
-                Fotografías
-              </p>
-            </Card>
+              <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-8 text-center shadow-md transition hover:-translate-y-1">
+                <span className="block text-5xl font-black text-[var(--accent)]">
+                  +200
+                </span>
+                <span className="mt-3 block font-semibold text-[var(--muted-foreground)]">
+                  Jóvenes Participantes
+                </span>
+              </div>
 
-            <Card className="text-center">
-              <h3 className="text-5xl font-black text-[var(--primary)]">
-                +30
-              </h3>
-
-              <p className="mt-3 font-semibold">
-                Eventos Realizados
-              </p>
-            </Card>
-
-            <Card className="text-center">
-              <h3 className="text-5xl font-black text-[var(--primary)]">
-                +200
-              </h3>
-
-              <p className="mt-3 font-semibold">
-                Jóvenes Participantes
-              </p>
-            </Card>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* MENSAJE FINAL */}
+        {/* SECCIÓN FINAL (Estilo Banner Centrado Limpio) */}
+        <section className="py-24">
+          <div className="mx-auto max-w-4xl px-6 text-center">
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[var(--primary)]/10 mb-6">
+              <Camera className="h-7 w-7 text-[var(--primary)]" />
+            </div>
+            <h2 className="text-4xl font-black md:text-5xl">
+              Más que fotografías
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted-foreground)] leading-relaxed">
+              Cada imagen refleja el compromiso, la alegría y la fe de una comunidad 
+              juvenil que crece junto a Cristo y al servicio de la Iglesia.
+            </p>
+          </div>
+        </section>
 
-      <section className="py-24">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-4xl font-black">
-            Más que fotografías
-          </h2>
-
-          <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-            Cada imagen refleja el compromiso, la alegría y
-            la fe de una comunidad juvenil que crece junto a
-            Cristo y al servicio de la Iglesia.
-          </p>
-        </div>
-      </section>
-    </main>
-    <LandingFooter />
+      </main>
+      <LandingFooter />
     </>
   );
 }

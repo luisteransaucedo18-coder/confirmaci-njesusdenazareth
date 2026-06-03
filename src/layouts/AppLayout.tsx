@@ -6,6 +6,7 @@ import { GlobalSearch } from "@/components/GlobalSearch";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
+import logoImage from "@/assets/images/Logo.jpg";
 
 const nav = [
   { href: "/app", label: "Dashboard", icon: BarChart3 },
@@ -27,9 +28,12 @@ export function AppLayout() {
   return (
     <div className="min-h-screen bg-[var(--background)]">
       <aside className={cn("fixed inset-y-0 left-0 z-40 w-72 border-r border-[var(--border)] bg-[var(--card)] p-4 transition lg:translate-x-0", open ? "translate-x-0" : "-translate-x-full")}>
-        <div className="mb-6">
-          <p className="text-lg font-black">Jesus de Nazareth</p>
-          <p className="text-xs text-[var(--muted-foreground)]">Gestion de Confirmacion</p>
+        <div className="mb-6 flex items-center gap-3">
+          <img src={logoImage} alt="Logo Jesus de Nazareth" className="h-12 w-12 rounded-full object-cover" />
+          <div>
+            <p className="text-lg font-black">Jesus de Nazareth</p>
+            <p className="text-xs text-[var(--muted-foreground)]">Gestion de Confirmacion</p>
+          </div>
         </div>
         <nav className="space-y-1">
           {nav.map((item) => (

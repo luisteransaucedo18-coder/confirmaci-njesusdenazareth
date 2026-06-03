@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/Input";
 import { loginSchema, type LoginValues } from "@/features/auth/schemas/authSchema";
 import { resetPassword, signIn } from "@/features/auth/services/auth";
 import loginBg from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.02 PM.jpeg";
+import logoImage from "@/assets/images/Logo.jpg";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -50,9 +51,12 @@ export function LoginPage() {
       </section>
       <section className="flex items-center justify-center p-6">
         <Card className="w-full max-w-md">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold">Iniciar sesion</h1>
-            <p className="text-sm text-[var(--muted-foreground)]">Accede al panel administrativo.</p>
+          <div className="mb-6 flex items-center gap-3">
+            <img src={logoImage} alt="Logo Jesus de Nazareth" className="h-12 w-12 rounded-full object-cover" />
+            <div>
+              <h1 className="text-2xl font-bold">Iniciar sesion</h1>
+              <p className="text-sm text-[var(--muted-foreground)]">Accede al panel administrativo.</p>
+            </div>
           </div>
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <label className="block text-sm font-medium">

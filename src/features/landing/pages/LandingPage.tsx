@@ -56,7 +56,11 @@ export function LandingPage() {
       <section
         id="/inicio"
         className="relative min-h-[92vh] bg-cover bg-center px-5 pt-24 text-white"
-        style={{ backgroundImage: `linear-gradient(rgba(15,23,42,.76),rgba(15,23,42,.86)), url(${slides[activeIndex]})` }}
+        style={{
+          backgroundImage: `linear-gradient(rgba(15,23,42,.76),rgba(15,23,42,.86)), url("${slides[activeIndex]}")`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
       >
         <div className="absolute inset-0 bg-slate-950/40" />
         <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_420px]">
@@ -121,7 +125,7 @@ export function LandingPage() {
               { id: "fallback-3", titulo: "Convivencia Parroquial", public_url: gallery3 },
               { id: "fallback-4", titulo: "Formación Cristiana", public_url: gallery4 },
             ]).map((item, index) => {
-              const src = item.public_url ?? item.storage_path ?? gallery1;
+              const src = item.public_url ?? gallery1;
               return (
                 <div key={item.id ?? index} className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--background)] shadow-sm">
                   <img src={src} alt={item.titulo ?? `Galeria ${index + 1}`} className="h-56 w-full object-cover" />

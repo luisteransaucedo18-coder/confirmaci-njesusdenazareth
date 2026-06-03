@@ -1,7 +1,6 @@
 import {
   Heart,
   Users,
-  Church,
   Star,
   Target,
   Eye,
@@ -15,6 +14,7 @@ import { Link } from "react-router-dom";
 import { getLandingStats } from "@/features/landing/services/landingService";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingHeader } from "@/features/landing/components/LandingHeader";
+import nosotrosImage from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.02 PM.jpeg";
 
 export default function Nosotros() {
   const valores = [
@@ -71,154 +71,168 @@ export default function Nosotros() {
   return (
     <>
       <LandingHeader />
-      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24">
-      {/* HERO */}
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 py-32 text-white">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <Church className="mx-auto mb-6 h-16 w-16 text-yellow-400" />
+       <section
+  className="relative min-h-screen overflow-hidden bg-cover bg-center"
+  style={{
+    backgroundImage: `linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.75)), url(${nosotrosImage})`,
+  }}
+>
+  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
 
-          <h1 className="text-5xl font-black md:text-7xl">
-            Nosotros
-          </h1>
+  <div className="relative mx-auto flex min-h-[85vh] max-w-7xl items-center px-6">
+    <div className="max-w-4xl text-white">
 
-          <p className="mx-auto mt-6 max-w-3xl text-xl text-slate-300">
-            Somos el Grupo de Confirmación Juvenil de la Parroquia
-            Jesús de Nazareth, una comunidad que acompaña a los jóvenes
-            en su crecimiento espiritual, humano y comunitario.
-          </p>
-        </div>
-      </section>
+      <span className="inline-flex rounded-full bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-md">
+        Nuestra Comunidad
+      </span>
+
+      <h1 className="mt-8 text-5xl font-black leading-tight md:text-7xl">
+        Conoce quiénes somos
+      </h1>
+
+      <p className="mt-8 max-w-3xl text-xl text-white/80">
+        Somos una comunidad juvenil comprometida con la formación
+        espiritual, humana y comunitaria de los jóvenes que se preparan
+        para recibir el Sacramento de la Confirmación.
+      </p>
+
+    </div>
+  </div>
+</section>
 
       {/* HISTORIA */}
 
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-12 lg:grid-cols-2">
-            <div>
-              <h2 className="mb-6 text-4xl font-black">
-                Nuestra Historia
-              </h2>
+            <div className="grid items-center gap-12 lg:grid-cols-2">
 
-              <p className="mb-5 text-lg leading-relaxed text-[var(--muted-foreground)]">
-                El Grupo de Confirmación Juvenil nace con el propósito
-                de acompañar a los jóvenes en su preparación para
-                recibir el Sacramento de la Confirmación y fortalecer
-                su encuentro personal con Jesucristo.
-              </p>
+                <div>
+                    <span className="inline-flex rounded-full bg-[var(--primary)]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.25em] text-[var(--primary)]">
+                    Nuestra Historia
+                    </span>
 
-              <p className="mb-5 text-lg leading-relaxed text-[var(--muted-foreground)]">
-                A través de los años hemos desarrollado encuentros,
-                retiros espirituales, convivencias, actividades
-                parroquiales y experiencias de servicio que permiten
-                a cada integrante crecer en la fe y convertirse en un
-                verdadero discípulo misionero.
-              </p>
+                    <h2 className="mt-6 text-5xl font-black">
+                    Una comunidad que sigue creciendo
+                    </h2>
 
-              <p className="text-lg leading-relaxed text-[var(--muted-foreground)]">
-                Nuestra comunidad continúa creciendo gracias al trabajo
-                de catequistas, coordinadores, sacerdotes y jóvenes
-                comprometidos con la misión evangelizadora de la Iglesia.
-              </p>
+                    <p className="mt-6 text-lg leading-8 text-[var(--muted-foreground)]">
+                    Nuestro grupo nació con la misión de acompañar a los jóvenes
+                    en su encuentro personal con Cristo y en su preparación para
+                    recibir el Sacramento de la Confirmación.
+                    </p>
+
+                    <p className="mt-5 text-lg leading-8 text-[var(--muted-foreground)]">
+                    Durante los años hemos desarrollado encuentros,
+                    convivencias, retiros espirituales y actividades de servicio
+                    que fortalecen la fe y construyen una verdadera comunidad.
+                    </p>
+
+                    <p className="mt-5 text-lg leading-8 text-[var(--muted-foreground)]">
+                    Hoy seguimos formando jóvenes comprometidos con el Evangelio,
+                    capaces de transformar su entorno mediante el amor y el servicio.
+                    </p>
+                </div>
+
+                <Card className="overflow-hidden rounded-[2rem] p-0 shadow-2xl">
+                    <img
+                    src={nosotrosImage}
+                    alt="Grupo Juvenil"
+                    className="h-[550px] w-full object-cover"
+                    />
+                </Card>
             </div>
-
-            <Card className="flex items-center justify-center p-12">
-              <Church className="h-32 w-32 text-[var(--primary)]" />
-            </Card>
-          </div>
         </div>
-      </section>
+    </section>
 
       {/* ESTADISTICAS */}
 
-      <section className="bg-[var(--card)] py-20">
+    <section className="py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+
             {estadisticas.map((item) => (
-              <Card
+                <Card
                 key={item.titulo}
-                className="text-center"
-              >
-                <h3 className="text-5xl font-black text-[var(--primary)]">
-                  {item.numero}
+                className="rounded-[2rem] border-0 text-center shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                <h3 className="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-6xl font-black text-transparent">
+                    {item.numero}
                 </h3>
 
-                <p className="mt-3 font-semibold">
-                  {item.titulo}
+                <p className="mt-4 text-lg font-semibold">
+                    {item.titulo}
                 </p>
-              </Card>
+                </Card>
             ))}
-          </div>
+
+            </div>
+
         </div>
-      </section>
+    </section>
 
       {/* MISION Y VISION */}
 
-      <section className="py-24">
+      <section className="bg-[var(--card)] py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-8 lg:grid-cols-2">
-            <Card>
-              <Target className="mb-5 h-12 w-12 text-[var(--primary)]" />
 
-              <h2 className="mb-4 text-3xl font-black">
+            <div className="grid gap-8 lg:grid-cols-2">
+
+            <Card className="rounded-[2rem] border-0 p-10 shadow-xl">
+
+                <Target className="mb-6 h-14 w-14 text-[var(--primary)]" />
+
+                <h2 className="mb-5 text-4xl font-black">
                 Misión
-              </h2>
+                </h2>
 
-              <p className="leading-relaxed text-[var(--muted-foreground)]">
-                Formar jóvenes comprometidos con Cristo,
-                fortaleciendo su vida espiritual, humana y
-                comunitaria para que sean testigos activos
-                del Evangelio en la Iglesia y la sociedad.
-              </p>
+                <p className="text-lg leading-8 text-[var(--muted-foreground)]">
+                Formar jóvenes comprometidos con Cristo fortaleciendo
+                su vida espiritual, humana y comunitaria para que sean
+                auténticos testigos del Evangelio.
+                </p>
+
             </Card>
 
-            <Card>
-              <Eye className="mb-5 h-12 w-12 text-[var(--primary)]" />
+            <Card className="rounded-[2rem] border-0 p-10 shadow-xl">
 
-              <h2 className="mb-4 text-3xl font-black">
+                <Eye className="mb-6 h-14 w-14 text-[var(--secondary)]" />
+
+                <h2 className="mb-5 text-4xl font-black">
                 Visión
-              </h2>
+                </h2>
 
-              <p className="leading-relaxed text-[var(--muted-foreground)]">
-                Ser una comunidad juvenil sólida, organizada
-                y evangelizadora, reconocida por formar
-                líderes cristianos comprometidos con el servicio
-                y la misión de la Iglesia.
-              </p>
+                <p className="text-lg leading-8 text-[var(--muted-foreground)]">
+                Ser una comunidad juvenil evangelizadora que forme líderes
+                cristianos comprometidos con el servicio y la transformación
+                de la sociedad.
+                </p>
+
             </Card>
-          </div>
+
+            </div>
         </div>
-      </section>
+    </section>
 
       {/* VALORES */}
 
       <section className="bg-[var(--card)] py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
-            <h2 className="text-4xl font-black">
-              Nuestros Valores
-            </h2>
-
-            <p className="mt-4 text-[var(--muted-foreground)]">
-              Principios que guían nuestro camino de formación.
-            </p>
+            <h2 className="text-4xl font-black">Nuestros Valores</h2>
+            <p className="mt-4 text-[var(--muted-foreground)]">Principios que guían nuestro camino de formación.</p>
           </div>
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {valores.map((valor) => {
               const Icon = valor.icon;
-
               return (
-                <Card key={valor.titulo}>
+                <Card key={valor.titulo} className="rounded-[2rem] p-8 shadow-xl shadow-[rgba(0,0,0,0.08)]">
                   <Icon className="mb-4 h-10 w-10 text-[var(--primary)]" />
-
-                  <h3 className="mb-3 text-xl font-bold">
-                    {valor.titulo}
-                  </h3>
-
-                  <p className="text-sm text-[var(--muted-foreground)]">
-                    {valor.descripcion}
-                  </p>
+                  <h3 className="mb-3 text-xl font-bold">{valor.titulo}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">{valor.descripcion}</p>
                 </Card>
               );
             })}
@@ -256,7 +270,7 @@ export default function Nosotros() {
 
       {/* CTA */}
 
-      <section className="bg-gradient-to-r from-[var(--primary)] to-blue-700 py-24 text-white">
+      <section className="bg-gradient-to-r from-[var(--primary)] to-lightblue-700 py-24 text-white">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <h2 className="text-4xl font-black">
             Forma parte de nuestra comunidad

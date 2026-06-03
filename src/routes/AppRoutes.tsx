@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { AsistenciasPage } from "@/features/asistencias/pages/AsistenciasPage";
 import { CatequistasPage } from "@/features/catequistas/pages/CatequistasPage";
@@ -19,31 +20,44 @@ import Contacto from "@/features/landing/pages/Contacto";
 import Catequistas from "@/features/landing/pages/Catequistas";
 import Inicio from "@/features/landing/pages/Inicio";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+}
+
 export function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/inicio" element={<Inicio />} />
-      <Route path="/nosotros" element={<Nosotros />} />
-      <Route path="/actividades" element={<Actividades />} />
-      <Route path="/galeria" element={<Galeria />} />
-      <Route path="/contacto" element={<Contacto />} />
-      <Route path="/catequesis" element={<Catequistas />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/app" element={<AppLayout />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="confirmantes" element={<ConfirmantesPage />} />
-          <Route path="asistencias" element={<AsistenciasPage />} />
-          <Route path="inventario" element={<InventarioPage />} />
-          <Route path="catequistas" element={<CatequistasPage />} />
-          <Route path="grupos" element={<GruposPage />} />
-          <Route path="eventos" element={<EventosPage />} />
-          <Route path="reportes" element={<ReportesPage />} />
-          <Route path="configuracion" element={<ConfiguracionPage />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/actividades" element={<Actividades />} />
+        <Route path="/galeria" element={<Galeria />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/catequesis" element={<Catequistas />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/app" element={<AppLayout />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="confirmantes" element={<ConfirmantesPage />} />
+            <Route path="asistencias" element={<AsistenciasPage />} />
+            <Route path="inventario" element={<InventarioPage />} />
+            <Route path="catequistas" element={<CatequistasPage />} />
+            <Route path="grupos" element={<GruposPage />} />
+            <Route path="eventos" element={<EventosPage />} />
+            <Route path="reportes" element={<ReportesPage />} />
+            <Route path="configuracion" element={<ConfiguracionPage />} />
+          </Route>
         </Route>
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }
