@@ -81,8 +81,10 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
     if (config.validationSchema) {
       const result = config.validationSchema.safeParse(values);
       if (!result.success) {
+        const flattened = result.error.flatten();
+        const fieldErrors = flattened.fieldErrors as Record<string, string[] | undefined>;
         const errors = Object.fromEntries(
-          Object.entries(result.error.flatten().fieldErrors).map(([key, messages]) => [key, messages?.[0] ?? ""]),
+          Object.entries(fieldErrors).map(([key, messages]) => [key, Array.isArray(messages) ? messages[0] ?? "" : ""]),
         );
         setFormErrors(errors as Record<string, string>);
         toast.error("Corrige los campos señalados");
@@ -90,7 +92,7 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
       }
 
       setFormErrors({});
-      saveMutation.mutate(result.data);
+      saveMutation.mutate(result.data as Record<string, unknown>);
       return;
     }
 
