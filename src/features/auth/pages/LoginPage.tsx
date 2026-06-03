@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogIn, Mail } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -12,6 +14,7 @@ import loginBg from "@/assets/images/WhatsApp Image 2026-06-02 at 3.32.02 PM.jpe
 import logoImage from "@/assets/images/Logo.jpg";
 
 export function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { register, handleSubmit, formState, getValues } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -66,7 +69,17 @@ export function LoginPage() {
             </label>
             <label className="block text-sm font-medium">
               Contrasena
-              <Input className="mt-1" type="password" {...register("password")} />
+              <div className="relative mt-1">
+                <Input className="pr-10" type={showPassword ? "text" : "password"} {...register("password")} />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               <span className="text-xs text-[var(--primary)]">{formState.errors.password?.message}</span>
             </label>
             <Button className="w-full" type="submit" disabled={formState.isSubmitting}>

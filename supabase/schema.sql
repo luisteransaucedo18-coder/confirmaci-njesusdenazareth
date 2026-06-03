@@ -35,7 +35,7 @@ create table if not exists public.grupos (
   id uuid primary key default gen_random_uuid(),
   nombre text not null unique,
   descripcion text,
-  nivel text not null,
+  nivel text,
   catequista_id uuid,
   capacidad integer not null default 30 check (capacidad > 0),
   created_at timestamptz not null default now(),
@@ -387,6 +387,8 @@ drop policy if exists "asistencias insert allowed" on public.asistencias;
 create policy "asistencias insert allowed" on public.asistencias for insert to authenticated with check (public.is_coordinator_or_admin() or public.owns_grupo(grupo_id));
 drop policy if exists "asistencias update coordinator admin" on public.asistencias;
 create policy "asistencias update coordinator admin" on public.asistencias for update to authenticated using (public.is_coordinator_or_admin()) with check (public.is_coordinator_or_admin());
+drop policy if exists "asistencias delete coordinator admin" on public.asistencias;
+create policy "asistencias delete coordinator admin" on public.asistencias for delete to authenticated using (public.is_coordinator_or_admin());
 
 drop policy if exists "inventario read authenticated" on public.inventario;
 create policy "inventario read authenticated" on public.inventario for select to authenticated using (true);

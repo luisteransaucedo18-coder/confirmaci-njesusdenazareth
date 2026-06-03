@@ -1,3 +1,5 @@
+import type { ZodTypeAny } from "zod";
+
 export type AppRole = "admin" | "coordinador" | "catequista";
 
 export type Profile = {
@@ -21,10 +23,11 @@ export type ResourceConfig = {
   fields: Array<{
     key: string;
     label: string;
-    type?: "text" | "number" | "date" | "time" | "email" | "textarea" | "select";
-    options?: string[];
+    type?: "text" | "number" | "date" | "time" | "email" | "textarea" | "select" | "hidden";
+    options?: Array<string | { label: string; value: string }>;
     required?: boolean;
   }>;
+  validationSchema?: ZodTypeAny;
 };
 
 export type DatabaseTables = {

@@ -23,6 +23,19 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
   const { role } = useAuth();
   const pageSize = 10;
   const queryKey = [config.table, search, page];
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const getFieldValue = (value: unknown) => (value != null ? String(value) : "");
+  const formatCellValue = (columnKey: string, value: unknown) => {
+    const field = config.fields.find((item) => item.key === columnKey);
+    if (field?.type === "select" && Array.isArray(field.options)) {
+      const option = field.options.find((option) => {
+        if (typeof option === "string") return option === value;
+        return option.value === value;
+      });
+      if (option) return typeof option === "string" ? option : option.label;
+    }
+    return value != null ? String(value) : "";
+  };
   const { data, isLoading } = useQuery({ queryKey, queryFn: () => listRows(config.table, config.searchFields, search, page, pageSize) });
   const rows = useMemo(() => (data?.data ?? []) as Record<string, unknown>[], [data]);
   const totalPages = Math.max(1, Math.ceil((data?.count ?? 0) / pageSize));
@@ -34,9 +47,10 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
     mutationFn: (values: Record<string, unknown>) => editing?.id ? updateRow(config.table, String(editing.id), values) : createRow(config.table, values),
     onSuccess: () => {
       toast.success("Registro guardado");
-      queryClient.invalidateQueries({ queryKey: [config.table] });
+      queryClient.invalidateQueries({ queryKey: [config.table], exact: false });
       setShowForm(false);
       setEditing(null);
+      setFormErrors({});
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "No se pudo guardar"),
   });
@@ -45,13 +59,42 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
     mutationFn: (id: string) => deleteRow(config.table, id),
     onSuccess: () => {
       toast.success("Registro eliminado");
-      queryClient.invalidateQueries({ queryKey: [config.table] });
+      queryClient.invalidateQueries({ queryKey: [config.table], exact: false });
     },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "No se pudo eliminar"),
   });
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const values = Object.fromEntries(new FormData(event.currentTarget).entries());
+    const rawValues = Object.fromEntries(new FormData(event.currentTarget).entries()) as Record<string, string>;
+    const values = Object.fromEntries(
+      Object.entries(rawValues).map(([key, value]) => {
+        const field = config.fields.find((item) => item.key === key);
+        if (field?.type === "number") {
+          const parsed = value === "" ? undefined : Number(value);
+          return [key, Number.isNaN(parsed) ? value : parsed];
+        }
+        return [key, value];
+      }),
+    ) as Record<string, unknown>;
+
+    if (config.validationSchema) {
+      const result = config.validationSchema.safeParse(values);
+      if (!result.success) {
+        const errors = Object.fromEntries(
+          Object.entries(result.error.flatten().fieldErrors).map(([key, messages]) => [key, messages?.[0] ?? ""]),
+        );
+        setFormErrors(errors as Record<string, string>);
+        toast.error("Corrige los campos señalados");
+        return;
+      }
+
+      setFormErrors({});
+      saveMutation.mutate(result.data);
+      return;
+    }
+
+    setFormErrors({});
     saveMutation.mutate(values);
   }
 
@@ -65,27 +108,84 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
         <div className="ml-auto flex flex-wrap gap-2">
           <Button variant="ghost" onClick={() => exportToExcel(config.table, rows)}><Download className="h-4 w-4" /> Excel</Button>
           <Button variant="ghost" onClick={() => exportToPdf(config.table, config.title, rows)}><FileText className="h-4 w-4" /> PDF</Button>
-          {canCreate ? <Button onClick={() => { setEditing(null); setShowForm(true); }}><Plus className="h-4 w-4" /> Nuevo</Button> : null}
+          {canCreate ? <Button onClick={() => { setEditing(null); setFormErrors({}); setShowForm(true); }}><Plus className="h-4 w-4" /> Nuevo</Button> : null}
         </div>
       </div>
       <Input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Buscar, filtrar y ordenar por columnas principales" />
       {showForm ? (
         <Card>
           <form className="grid gap-4 md:grid-cols-2" onSubmit={submit}>
-            {config.fields.map((field) => (
-              <label key={field.key} className="block text-sm font-medium">
-                {field.label}
-                {field.type === "textarea" ? (
-                  <Textarea name={field.key} defaultValue={String(editing?.[field.key] ?? "")} required={field.required} className="mt-1" />
-                ) : field.type === "select" ? (
-                  <Select name={field.key} defaultValue={String(editing?.[field.key] ?? field.options?.[0] ?? "")} required={field.required} className="mt-1">
-                    {field.options?.map((option) => <option key={option} value={option}>{option}</option>)}
-                  </Select>
-                ) : (
-                  <Input name={field.key} type={field.type ?? "text"} defaultValue={String(editing?.[field.key] ?? "")} required={field.required} className="mt-1" />
-                )}
-              </label>
-            ))}
+            {config.fields.map((field) => {
+              if (field.type === "hidden") {
+                return (
+                  <Input
+                    key={field.key}
+                    name={field.key}
+                    type="hidden"
+                    defaultValue={getFieldValue(editing?.[field.key])}
+                  />
+                );
+              }
+
+              return (
+                <label key={field.key} className="block text-sm font-medium">
+                  {field.label}
+                  {field.type === "textarea" ? (
+                    <>
+                      <Textarea
+                        name={field.key}
+                        defaultValue={getFieldValue(editing?.[field.key])}
+                        required={field.required}
+                        className="mt-1"
+                        onInput={() => formErrors[field.key] && setFormErrors((prev) => {
+                          const copy = { ...prev };
+                          delete copy[field.key];
+                          return copy;
+                        })}
+                      />
+                      {formErrors[field.key] ? <p className="mt-1 text-sm text-red-600">{formErrors[field.key]}</p> : null}
+                    </>
+                  ) : field.type === "select" ? (
+                    <>
+                      <Select
+                        name={field.key}
+                        defaultValue={getFieldValue(editing?.[field.key]) || (Array.isArray(field.options) ? (typeof field.options[0] === "string" ? field.options[0] : field.options[0]?.value) : "") || ""}
+                        required={field.required}
+                        className="mt-1"
+                        onChange={() => formErrors[field.key] && setFormErrors((prev) => {
+                          const copy = { ...prev };
+                          delete copy[field.key];
+                          return copy;
+                        })}
+                      >
+                        {field.options?.map((option) => {
+                          const value = typeof option === "string" ? option : option.value;
+                          const label = typeof option === "string" ? option : option.label;
+                          return <option key={value} value={value}>{label}</option>;
+                        })}
+                      </Select>
+                      {formErrors[field.key] ? <p className="mt-1 text-sm text-red-600">{formErrors[field.key]}</p> : null}
+                    </>
+                  ) : (
+                    <>
+                      <Input
+                        name={field.key}
+                        type={field.type ?? "text"}
+                        defaultValue={getFieldValue(editing?.[field.key])}
+                        required={field.required}
+                        className="mt-1"
+                        onInput={() => formErrors[field.key] && setFormErrors((prev) => {
+                          const copy = { ...prev };
+                          delete copy[field.key];
+                          return copy;
+                        })}
+                      />
+                      {formErrors[field.key] ? <p className="mt-1 text-sm text-red-600">{formErrors[field.key]}</p> : null}
+                    </>
+                  )}
+                </label>
+              );
+            })}
             <div className="flex gap-2 md:col-span-2">
               <Button type="submit" disabled={saveMutation.isPending}>Guardar</Button>
               <Button type="button" variant="ghost" onClick={() => setShowForm(false)}>Cancelar</Button>
@@ -105,10 +205,10 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
             <tbody>
               {rows.map((row) => (
                 <tr key={String(row.id)} className="border-b border-[var(--border)] last:border-b-0">
-                  {config.columns.map((column) => <td key={column.key} className="px-4 py-3">{String(row[column.key] ?? "")}</td>)}
+                  {config.columns.map((column) => <td key={column.key} className="px-4 py-3">{formatCellValue(column.key, row[column.key])}</td>)}
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">
-                      {canEdit ? <Button variant="ghost" className="h-9 w-9 px-0" onClick={() => { setEditing(row); setShowForm(true); }} aria-label="Editar"><Pencil className="h-4 w-4" /></Button> : null}
+                      {canEdit ? <Button variant="ghost" className="h-9 w-9 px-0" onClick={() => { setEditing(row); setFormErrors({}); setShowForm(true); }} aria-label="Editar"><Pencil className="h-4 w-4" /></Button> : null}
                       {canDelete ? <Button variant="danger" className="h-9 w-9 px-0" onClick={() => deleteMutation.mutate(String(row.id))} aria-label="Eliminar"><Trash2 className="h-4 w-4" /></Button> : null}
                     </div>
                   </td>
