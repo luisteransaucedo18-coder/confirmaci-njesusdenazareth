@@ -27,6 +27,7 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
+      {open ? <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setOpen(false)} /> : null}
       <aside className={cn("fixed inset-y-0 left-0 z-40 w-72 border-r border-[var(--border)] bg-[var(--card)] p-4 transition lg:translate-x-0", open ? "translate-x-0" : "-translate-x-full")}>
         <div className="mb-6 flex items-center gap-3">
           <img src={logoImage} alt="Logo Jesus de Nazareth" className="h-12 w-12 rounded-full object-cover" />
@@ -53,7 +54,7 @@ export function AppLayout() {
       </aside>
       <div className="lg:pl-72">
         <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--background)]/95 px-4 py-3 backdrop-blur">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Button variant="ghost" className="h-10 w-10 px-0 lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu">
               <Menu className="h-5 w-5" />
             </Button>

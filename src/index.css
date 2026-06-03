@@ -95,6 +95,15 @@ input,
 select,
 textarea {
   font: inherit;
+  min-width: 0;
+}
+
+img,
+video,
+iframe,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 a {

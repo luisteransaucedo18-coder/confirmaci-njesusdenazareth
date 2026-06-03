@@ -13,7 +13,7 @@ export function GlobalSearch() {
   });
 
   return (
-    <div className="relative w-full max-w-xl">
+    <div className="relative w-full max-w-xl min-w-0">
       <Search className="pointer-events-none absolute left-3 top-2.5 h-5 w-5 text-[var(--muted-foreground)]" />
       <Input value={term} onChange={(event) => setTerm(event.target.value)} placeholder="Buscar confirmantes, inventario, eventos..." className="pl-10" />
       {term.length > 2 && data.length > 0 ? (

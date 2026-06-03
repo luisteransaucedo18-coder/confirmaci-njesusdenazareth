@@ -95,7 +95,7 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
       ) : null}
       {isLoading ? <Skeleton /> : rows.length === 0 ? <EmptyState /> : (
         <Card className="overflow-x-auto p-0">
-          <table className="w-full min-w-[760px] border-collapse text-sm">
+          <table className="w-full md:min-w-[760px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] text-left">
                 {config.columns.map((column) => <th key={column.key} className="px-4 py-3 font-semibold">{column.label}</th>)}
@@ -118,7 +118,7 @@ export function AdminResourcePage({ config }: { config: ResourceConfig }) {
           </table>
         </Card>
       )}
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
         <Button variant="ghost" disabled={page <= 1} onClick={() => setPage((value) => value - 1)}>Anterior</Button>
         <span className="text-sm text-[var(--muted-foreground)]">Pagina {page} de {totalPages}</span>
         <Button variant="ghost" disabled={page >= totalPages} onClick={() => setPage((value) => value + 1)}>Siguiente</Button>

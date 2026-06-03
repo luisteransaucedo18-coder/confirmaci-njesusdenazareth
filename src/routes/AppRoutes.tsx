@@ -8,7 +8,6 @@ import { ConfiguracionPage } from "@/features/configuracion/pages/ConfiguracionP
 import { EventosPage } from "@/features/eventos/pages/EventosPage";
 import { GruposPage } from "@/features/grupos/pages/GruposPage";
 import { InventarioPage } from "@/features/inventario/pages/InventarioPage";
-import { LandingPage } from "@/features/landing/pages/LandingPage";
 import { ReportesPage } from "@/features/reportes/pages/ReportesPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AppLayout } from "@/layouts/AppLayout";
@@ -35,7 +34,7 @@ export function AppRoutes() {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/nosotros" element={<Nosotros />} />
